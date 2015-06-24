@@ -20,12 +20,11 @@ class CommonColumns(Base):
     __abstract__ = True
     _created = Column(DateTime, default=func.now())
     _updated = Column(DateTime, default=func.now(), onupdate=func.now())
-    _etag = Column(String(40))
-    _id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
 class Shifts(CommonColumns):
     __tablename__ = 'shifts';
-    user_id = Column(Integer, ForeignKey('users._id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     state = Column(Enum('scheduled', 'in_progress', 'completed', name="shift_states"), default='scheduled')
     is_payed = Column(Boolean, default=0)
     scheduled_start = Column(DateTime)
@@ -41,7 +40,7 @@ class Shifts(CommonColumns):
 
 class Requests(CommonColumns):
     __tablename__ = 'requests'
-    user_id = Column(Integer, ForeignKey('users._id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     deliver_location = Column(String(120), nullable=False)
     need = Column(String(120), nullable=False)
     notes = Column(BLOB)
@@ -49,8 +48,8 @@ class Requests(CommonColumns):
 
 class Deliveries(CommonColumns):
     __tablename__ = 'deliveries'
-    request_id = Column(Integer, ForeignKey('requests._id'), nullable=False)
-    sidekick_id = Column(Integer, ForeignKey('users._id'), nullable=False)
+    request_id = Column(Integer, ForeignKey('requests.id'), nullable=False)
+    sidekick_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     in_progress = Column(DateTime)
     completed = Column(DateTime)
     is_canceled = Column(Boolean, default=False)
