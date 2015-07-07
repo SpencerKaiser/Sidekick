@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import column_property
 from sqlalchemy.orm import column_property, relationship
 from sqlalchemy import func
+import datetime as dt
 from sqlalchemy import (
     Column,
     String,
@@ -15,6 +16,7 @@ from sqlalchemy import (
     )
 
 Base = declarative_base()
+default_time = dt.datetime(2001, 1, 1)
 
 class CommonColumns(Base):
     __abstract__ = True
@@ -31,29 +33,46 @@ class Shifts(CommonColumns):
     scheduled_start = Column(DateTime)
     duration_in_minutes = Column(Integer, default=60)
     clock_in = Column(DateTime)
-    clock_out = Column(DateTime)
+    clock_out = Column(DateTime, default=default_time)
 
     @classmethod
     def from_tuple(cls, data):
         """Helper method to populate the db"""
-        return cls(user_id=data[0], is_payed=False, scheduled_start=func.now())
-
+        return cls(user_id=data[0], is_payed=False, scheduled_start=func.now(), clock_in=func.now(), clock_out=default_time)
 
 class Requests(CommonColumns):
     __tablename__ = 'requests'
     user_id = Column(Integer, ForeignKey('users._id'), nullable=False)
-    deliver_location = Column(String(120), nullable=False)
+    delivery_location = Column(String(120), nullable=False)
     need = Column(String(120), nullable=False)
     notes = Column(BLOB)
     is_canceled = Column(Boolean, default=False)
+
+    @classmethod
+    def from_tuple(cls, data):
+        """Helper method to populate the db"""
+        return cls(user_id=data[0], delivery_location=data[1], need=data[2], notes=data[3], is_canceled=False)
 
 class Deliveries(CommonColumns):
     __tablename__ = 'deliveries'
     request_id = Column(Integer, ForeignKey('requests._id'), nullable=False)
     sidekick_id = Column(Integer, ForeignKey('users._id'), nullable=False)
     in_progress = Column(DateTime)
-    completed = Column(DateTime)
+    completed = Column(DateTime, default=default_time)
     is_canceled = Column(Boolean, default=False)
+
+    def __init__(self, request_id, sidekick_id):
+        self.request_id = request_id
+        self.sidekick_id = sidekick_id
+        self.in_progress = default_time
+        self.completed = default_time
+        self.is_canceled = False
+
+    @classmethod
+    def from_tuple(cls, data):
+        """Helper method to populate the db"""
+        return cls(request_id=data[0], sidekick_id=data[1])
+
 
 class Users(CommonColumns):
     __tablename__ = 'users'

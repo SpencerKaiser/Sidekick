@@ -18,7 +18,7 @@ IF_MATCH=False
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://sidekick:halpme@localhost/sidekick_dev?unix_socket=/Applications/MAMP/tmp/mysql/mysql.sock'
 
 # Enable reads (GET) for resources/collections
-RESOURCE_METHODS = ['GET']
+RESOURCE_METHODS = ['GET', 'POST']
 
 # Enable reads (GET) and edits (PATCH) of individual items.
 ITEM_METHODS = ['GET', 'PATCH']
@@ -32,11 +32,10 @@ DOMAIN = {
     }
 
 # Customize methods allowed for each resource
-DOMAIN['users'].update({
-	'resource_methods': ['GET', 'POST']
-	})
 DOMAIN['shifts'].update({
+	# 'url': 'users/<regex("[0-9]*"):user_id>/shifts',
 	'resource_methods': ['GET', 'POST', 'DELETE'],
 	'item_methods': ['GET', 'PATCH', 'DELETE']
 	})
+
 
