@@ -15,7 +15,8 @@ HATEOAS = False
 IF_MATCH=False
 
 # DB connection string in format dbusername:password@domain/databasename
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://sidekick:halpme@localhost/sidekick_dev?unix_socket=/Applications/MAMP/tmp/mysql/mysql.sock'
+# SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://sidekick:halpme@localhost/sidekick_dev?unix_socket=/Applications/MAMP/tmp/mysql/mysql.sock'
+SQLALCHEMY_DATABASE_URI = 'postgresql://sidekick:halpme@localhost/sidekick_dev'
 
 # Enable reads (GET) for resources/collections
 RESOURCE_METHODS = ['GET', 'POST']

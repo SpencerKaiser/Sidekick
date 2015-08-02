@@ -8,17 +8,12 @@ from sqlalchemy import func
 from tables import Users, Shifts, Requests, Deliveries, Base
 from dispatchController import createDeliveryForRequest
 
-# db = SQLAlchemy(app)
-# class SQL(_SQL):
-# 	driver = db
-
 app = Eve(validator=ValidatorSQL, data=SQL)
 
 # bind SQLAlchemy
 db = app.data.driver
 Base.metadata.bind = db.engine
 db.Model = Base
-
 
 def post_requests_post_callback(request, lookup):
 	data = json.loads(lookup.data)

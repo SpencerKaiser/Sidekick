@@ -12,7 +12,7 @@ from sqlalchemy import (
     Boolean,
     Enum,
     ForeignKey,
-    BLOB
+    Text
     )
 
 Base = declarative_base()
@@ -20,20 +20,20 @@ default_time = dt.datetime(2001, 1, 1)
 
 class CommonColumns(Base):
     __abstract__ = True
-    _created = Column(DateTime, default=func.now())
-    _updated = Column(DateTime, default=func.now(), onupdate=func.now())
+    _created = Column(DateTime(True), default=func.now())
+    _updated = Column(DateTime(True), default=func.now(), onupdate=func.now())
     _etag = Column(String(40))
     _id = Column(Integer, primary_key=True, autoincrement=True)
 
 class Shifts(CommonColumns):
     __tablename__ = 'shifts';
     user_id = Column(Integer, ForeignKey('users._id'), nullable=False)
-    state = Column(Enum('scheduled', 'in_progress', 'completed', name="shift_states"), default='scheduled')
+    state = Column(Enum('scheduled', 'in_progress', 'completed', name='shift_states'), default='scheduled')
     is_payed = Column(Boolean, default=0)
-    scheduled_start = Column(DateTime)
+    scheduled_start = Column(DateTime(True))
     duration_in_minutes = Column(Integer, default=60)
-    clock_in = Column(DateTime)
-    clock_out = Column(DateTime, default=default_time)
+    clock_in = Column(DateTime(True))
+    clock_out = Column(DateTime(True), default=default_time)
 
     @classmethod
     def from_tuple(cls, data):
@@ -43,9 +43,9 @@ class Shifts(CommonColumns):
 class Requests(CommonColumns):
     __tablename__ = 'requests'
     user_id = Column(Integer, ForeignKey('users._id'), nullable=False)
-    delivery_location = Column(String(120), nullable=False)
-    need = Column(String(120), nullable=False)
-    notes = Column(BLOB)
+    delivery_location = Column(Text, nullable=False)
+    need = Column(Text, nullable=False)
+    notes = Column(Text)
     is_canceled = Column(Boolean, default=False)
 
     @classmethod
@@ -57,8 +57,8 @@ class Deliveries(CommonColumns):
     __tablename__ = 'deliveries'
     request_id = Column(Integer, ForeignKey('requests._id'), nullable=False)
     sidekick_id = Column(Integer, ForeignKey('users._id'), nullable=False)
-    in_progress = Column(DateTime)
-    completed = Column(DateTime, default=default_time)
+    in_progress = Column(DateTime(True))
+    completed = Column(DateTime(True), default=default_time)
     is_canceled = Column(Boolean, default=False)
 
     def __init__(self, request_id, sidekick_id):
@@ -76,12 +76,12 @@ class Deliveries(CommonColumns):
 
 class Users(CommonColumns):
     __tablename__ = 'users'
-    first_name = Column(String(80), nullable=False)
-    last_name = Column(String(120), nullable=False)
-    email = Column(String(120), nullable=False)
-    phone = Column(String(120), nullable=False)
-    password = Column(String(120), nullable=False)
-    image = Column(String(240), default='default.jpg')
+    first_name = Column(Text, nullable=False)
+    last_name = Column(Text, nullable=False)
+    email = Column(Text, nullable=False)
+    phone = Column(Text, nullable=False)
+    password = Column(Text, nullable=False)
+    image = Column(Text, default='default.jpg')
     has_vehicle = Column(Boolean)
     has_bike = Column(Boolean)
     type = Column(Enum('user', 'sidekick', 'arbitrator', 'admin', name='user_types'), default='user')

@@ -1,12 +1,23 @@
 # Sidekick Dispatch Service
 
 ## Dependencies
-* eve
-``pip install eve ``
-* SQLAlchemy
-`` pip install SQLAlchemy``
+* eve: ``pip install eve ``
+* SQLAlchemy: `` pip install SQLAlchemy``
 
-The mysql database (defined in settings.py) needs to be created before starting the service.
 
-To run:
-``python dispatch.py``
+## Database Stuff
+To install postgres, follow the instructions [here](https://www.codefellows.org/blog/three-battle-tested-ways-to-install-postgresql#macosx)
+
+After that, install a database adapter for postgres
+
+	pip install psycopg2
+
+And create a database and new user for that db
+	
+	createdb sidekick
+	createuser -P sidekick
+	GRANT ALL PRIVILEGES ON sidekick_dev TO sidekick;
+
+To run
+
+	python dispatch.py
