@@ -20,15 +20,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lfB-ud-RWs">
                                 <rect key="frame" x="51" y="84" width="498" height="416"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Adn-cr-BLT">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Adn-cr-BLT">
                                         <rect key="frame" x="50" y="198" width="398" height="30"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="YWr-1I-Tdq"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="next"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Phone Number" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="usQ-XV-9Ty">
-                                        <rect key="frame" x="50" y="279" width="398" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Sidekick!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spJ-oO-YS2">
                                         <rect key="frame" x="166" y="93" width="166.5" height="22.5"/>
@@ -48,6 +47,12 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Phone Number" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="usQ-XV-9Ty">
+                                        <rect key="frame" x="50" y="279" width="398" height="30"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="done"/>
+                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -59,6 +64,7 @@
                                     <constraint firstAttribute="trailing" secondItem="Adn-cr-BLT" secondAttribute="trailing" constant="50" id="P7K-Eo-jWy"/>
                                     <constraint firstItem="ajH-xV-LKK" firstAttribute="leading" secondItem="lfB-ud-RWs" secondAttribute="leading" constant="54" id="POG-qc-itu"/>
                                     <constraint firstItem="usQ-XV-9Ty" firstAttribute="top" secondItem="Adn-cr-BLT" secondAttribute="bottom" constant="51" id="T6a-iW-hvA"/>
+                                    <constraint firstItem="Adn-cr-BLT" firstAttribute="height" secondItem="usQ-XV-9Ty" secondAttribute="height" id="YU8-49-av9"/>
                                     <constraint firstAttribute="trailing" secondItem="ajH-xV-LKK" secondAttribute="trailing" constant="53" id="aCD-44-nUu"/>
                                     <constraint firstItem="Adn-cr-BLT" firstAttribute="leading" secondItem="lfB-ud-RWs" secondAttribute="leading" constant="50" id="aXW-44-Xfz"/>
                                     <constraint firstItem="usQ-XV-9Ty" firstAttribute="top" secondItem="Adn-cr-BLT" secondAttribute="bottom" constant="51" id="bot-UF-gwk"/>
@@ -103,10 +109,14 @@
                             </mask>
                         </variation>
                     </view>
+                    <connections>
+                        <outlet property="nameTextField" destination="Adn-cr-BLT" id="jQt-Jb-YA9"/>
+                        <outlet property="phoneNumberTextField" destination="usQ-XV-9Ty" id="jhs-7q-E4A"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="157" y="516"/>
+            <point key="canvasLocation" x="190" y="472"/>
         </scene>
     </scenes>
 </document>
