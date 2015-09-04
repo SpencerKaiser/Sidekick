@@ -420,6 +420,7 @@
 				09C3D7451B95441E008FE710 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		09C3D7461B95441E008FE710 /* Build configuration list for PBXNativeTarget "SidekickTests" */ = {
 			isa = XCConfigurationList;
@@ -428,6 +429,7 @@
 				09C3D7481B95441E008FE710 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

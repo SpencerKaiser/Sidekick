@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 
+@import CoreLocation;
+
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
@@ -107,6 +109,74 @@
     if(strippedPhoneNumber.length >= 10){
         [self closeKeyboard];
     }
+}
+
+-(void) notifyUserRequest {
+    // get the lat and long
+    NSString *lng = @"-96.783117";
+    NSString *lat = @"32.845664";
+    NSString *userName = @"default user";
+    NSString *contactNumber = @"(111) 111-1111";
+    NSString *neededItems = @"default item, default item, default item";
+    //userName = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_name"];
+    //contactNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"contact_number"];
+    // get lat and long
+    CLLocationCoordinate2D coordinate = [self getLocation];
+    lat = [NSString stringWithFormat:@"%f", coordinate.latitude];
+    lng = [NSString stringWithFormat:@"%f", coordinate.longitude];
+
+    // get the items in the list
+
+    //
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    NSString *type = @"location";
+    NSString *name = @"drop off location";
+    NSDictionary *attachmentInfo = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                    type, @"type",
+                                    lng, @"lng",
+                                    lat, @"lat",
+                                    name, @"name",
+                                    nil];
+    NSString *bot_id = @"88385c9b59b6b9b96029115b91";
+    NSString *text = [NSString stringWithFormat:@"%@ has requested %@. Contact them at %@", userName, neededItems, contactNumber];
+    NSArray *attachments = [NSArray arrayWithObjects:attachmentInfo, nil];
+    NSDictionary *tmp = [[NSDictionary alloc] initWithObjectsAndKeys:
+                         bot_id, @"bot_id",
+                         text, @"text",
+                         attachments, @"attachments",
+                         nil];
+    NSError *error;
+    NSData *postdata = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+    NSString *postLength = [NSString stringWithFormat:@"%lu",(unsigned long)[postdata length]];
+    
+    [request setURL:[NSURL URLWithString:@"https://api.groupme.com/v3/bots/post"]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postdata];
+    
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    
+    if(conn) {
+        NSLog(@"Connection Successful");
+    } else {
+        NSLog(@"Connection could not be made");
+    }
+
+}
+
+-(CLLocationCoordinate2D) getLocation{
+    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    [locationManager requestWhenInUseAuthorization];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    [locationManager startUpdatingLocation];
+    CLLocation *location = [locationManager location];
+    CLLocationCoordinate2D coordinate = [location coordinate];
+    NSLog(@"lat: %f", locationManager.location.coordinate.latitude);
+    NSLog(@"long: %f", locationManager.location.coordinate.latitude);
+    return coordinate;
 }
 
 @end
