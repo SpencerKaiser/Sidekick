@@ -20,10 +20,10 @@ default_time = dt.datetime(2001, 1, 1)
 
 class CommonColumns(Base):
     __abstract__ = True
+    _id = Column(Integer, primary_key=True, autoincrement=True)
     _created = Column(DateTime(True), default=func.now())
     _updated = Column(DateTime(True), default=func.now(), onupdate=func.now())
     _etag = Column(String(40))
-    _id = Column(Integer, primary_key=True, autoincrement=True)
 
 class Shifts(CommonColumns):
     __tablename__ = 'shifts';
@@ -87,13 +87,14 @@ class Users(CommonColumns):
     type = Column(Enum('user', 'sidekick', 'arbitrator', 'admin', name='user_types'), default='user')
     is_suspended = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
+    online = Column(Boolean, default=True)
     requests = relationship(Requests, uselist=False, cascade="delete")
     deliveries = relationship(Deliveries, uselist=False)
 
     @classmethod
     def from_tuple(cls, data):
         """Helper method to populate the db"""
-        return cls(first_name=data[0], last_name=data[1], email=data[2], phone=data[3], type=data[4], password="insertpasshere")
+        return cls(first_name=data[0], last_name=data[1], email=data[2], phone=data[3], type=data[4], password="insertpasshere", online=True)
 
 
 

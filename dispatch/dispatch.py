@@ -18,7 +18,6 @@ db.Model = Base
 def post_requests_post_callback(request, lookup):
 	data = json.loads(lookup.data)
 	if data['_status'] == 'OK':
-		print "Assign request", data['_id'], "to a sidekick"
 		createDeliveryForRequest(db, data['_id'])
 
 # add custom route
@@ -37,14 +36,16 @@ if __name__ == '__main__':
 
 	# Insert some example data in the db
 	test_data = [
-	    (u'George', u'Washington', u'gwash@money.com', u'1231231234', u'user'),
+	    (u'George', u'Washington', u'gwash@money.com', u'1231231234', u'sidekick'),
 	    (u'John', u'Adams', u'jadams@money.com', u'1231231234', u'sidekick'),
+	    (u'Carly', u'Kubacak', u'ckubacak@money.com', u'1231231234', u'user'),
 	    (u'Thomas', u'Jefferson', u'tjefferson@money.com', u'1231231234', u'admin'),
 	]
 
 	test_data_shifts = [
 		(u'1'),
-		(u'2')
+		(u'2'),
+		(u'3'),
 	]
 
 	test_data_requests = [
