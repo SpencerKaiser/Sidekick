@@ -1,6 +1,5 @@
 # SQLAlchemy Imports
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import column_property
 from sqlalchemy.orm import column_property, relationship
 from sqlalchemy import func
 import datetime as dt
@@ -12,8 +11,8 @@ from sqlalchemy import (
     Boolean,
     Enum,
     ForeignKey,
-    Text
-    )
+    Text,
+)
 
 Base = declarative_base()
 default_time = dt.datetime(2001, 1, 1)
@@ -21,8 +20,8 @@ default_time = dt.datetime(2001, 1, 1)
 class CommonColumns(Base):
     __abstract__ = True
     _id = Column(Integer, primary_key=True, autoincrement=True)
-    _created = Column(DateTime(True), default=func.now())
-    _updated = Column(DateTime(True), default=func.now(), onupdate=func.now())
+    _created = Column(DateTime(), default=func.now())
+    _updated = Column(DateTime(), default=func.now(), onupdate=func.now())
     _etag = Column(String(40))
 
 class Shifts(CommonColumns):
@@ -30,10 +29,10 @@ class Shifts(CommonColumns):
     user_id = Column(Integer, ForeignKey('users._id'), nullable=False)
     state = Column(Enum('scheduled', 'in_progress', 'completed', name='shift_states'), default='scheduled')
     is_payed = Column(Boolean, default=0)
-    scheduled_start = Column(DateTime(True))
+    scheduled_start = Column(DateTime())
     duration_in_minutes = Column(Integer, default=60)
-    clock_in = Column(DateTime(True))
-    clock_out = Column(DateTime(True), default=default_time)
+    clock_in = Column(DateTime())
+    clock_out = Column(DateTime(), default=default_time)
 
     @classmethod
     def from_tuple(cls, data):
@@ -57,8 +56,8 @@ class Deliveries(CommonColumns):
     __tablename__ = 'deliveries'
     request_id = Column(Integer, ForeignKey('requests._id'), nullable=False)
     sidekick_id = Column(Integer, ForeignKey('users._id'), nullable=False)
-    in_progress = Column(DateTime(True))
-    completed = Column(DateTime(True), default=default_time)
+    in_progress = Column(DateTime())
+    completed = Column(DateTime(), default=default_time)
     is_canceled = Column(Boolean, default=False)
 
     def __init__(self, request_id, sidekick_id):
@@ -94,7 +93,7 @@ class Users(CommonColumns):
     @classmethod
     def from_tuple(cls, data):
         """Helper method to populate the db"""
-        return cls(first_name=data[0], last_name=data[1], email=data[2], phone=data[3], type=data[4], password="insertpasshere", online=True)
+        return cls(first_name=data[0], last_name=data[1], email=data[2], password=data[3], phone=data[4], type=data[5], online=True)
 
 
 

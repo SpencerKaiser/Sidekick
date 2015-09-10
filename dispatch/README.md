@@ -3,6 +3,7 @@
 ## Dependencies
 * eve: ``pip install eve ``
 * SQLAlchemy: `` pip install SQLAlchemy``
+* bcrpyt ``pip install py-bcrypt``
 
 
 ## Database Stuff

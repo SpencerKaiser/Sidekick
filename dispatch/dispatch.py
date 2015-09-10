@@ -1,14 +1,26 @@
-import json
-import datetime as dt
+from dispatchController import createDeliveryForRequest
 from eve import Eve
+from eve.auth import BasicAuth
 from eve_sqlalchemy import SQL
+from eve_sqlalchemy.decorators import registerSchema
 from eve_sqlalchemy.validation import ValidatorSQL
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from tables import Users, Shifts, Requests, Deliveries, Base
-from dispatchController import createDeliveryForRequest
+import bcrypt
+import datetime as dt
+import json
 
-app = Eve(validator=ValidatorSQL, data=SQL)
+class BCryptAuth(BasicAuth):
+	def check_auth(self, username, password, allowed_roles, resource, method):
+		if resource == 'users':
+			return username == 'sidekick' and password == 'halpme'
+		else:
+			user = app.data.driver.session.query(Users).filter(Users.email == username).first()
+			self.set_request_auth_value(user._id)
+			return user and bcrypt.hashpw(password, user.password) == user.password
+
+app = Eve(validator=ValidatorSQL, data=SQL, auth=BCryptAuth)
 
 # bind SQLAlchemy
 db = app.data.driver
@@ -35,11 +47,12 @@ if __name__ == '__main__':
 	db.create_all()
 
 	# Insert some example data in the db
+	masterPassword = bcrypt.hashpw('password123', bcrypt.gensalt())
 	test_data = [
-	    (u'George', u'Washington', u'gwash@money.com', u'1231231234', u'sidekick'),
-	    (u'John', u'Adams', u'jadams@money.com', u'1231231234', u'sidekick'),
-	    (u'Carly', u'Kubacak', u'ckubacak@money.com', u'1231231234', u'user'),
-	    (u'Thomas', u'Jefferson', u'tjefferson@money.com', u'1231231234', u'admin'),
+	    (u'George', u'Washington', u'gwash@money.com', masterPassword, u'1231231234', u'sidekick'),
+	    (u'John', u'Adams', u'jadams@money.com', masterPassword, u'1231231234', u'sidekick'),
+	    (u'Carly', u'Kubacak', u'ckubacak@money.com', masterPassword, u'1231231234', u'user'),
+	    (u'Thomas', u'Jefferson', u'tjefferson@money.com', masterPassword, u'1231231234', u'admin'),
 	]
 
 	test_data_shifts = [
@@ -57,7 +70,7 @@ if __name__ == '__main__':
 	test_data_deliveries = [
 		(u'1', u'1'),
 		(u'2', u'2'),
-		(u'3', u'1')
+		(u'3', u'1'),
 	]
 
 	if not db.session.query(Users).count():

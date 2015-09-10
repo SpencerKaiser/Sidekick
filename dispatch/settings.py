@@ -14,6 +14,9 @@ HATEOAS = False
 # Disable etag attribute 
 IF_MATCH=False
 
+# Name of the field used to store the owner of each document
+AUTH_FIELD = 'user_id'
+
 # DB connection string in format dbusername:password@domain/databasename
 # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://sidekick:halpme@localhost/sidekick_dev?unix_socket=/Applications/MAMP/tmp/mysql/mysql.sock'
 SQLALCHEMY_DATABASE_URI = 'postgresql://sidekick:halpme@localhost/sidekick_dev'
@@ -36,7 +39,10 @@ DOMAIN = {
 DOMAIN['shifts'].update({
 	# 'url': 'users/<regex("[0-9]*"):user_id>/shifts',
 	'resource_methods': ['GET', 'POST', 'DELETE'],
-	'item_methods': ['GET', 'PATCH', 'DELETE']
+	'item_methods': ['GET', 'PATCH', 'DELETE'],
+	})
+DOMAIN['deliveries'].update({
+	'auth_field': 'sidekick_id',
 	})
 
 
