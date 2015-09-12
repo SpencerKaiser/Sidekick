@@ -89,11 +89,12 @@ class Users(CommonColumns):
     online = Column(Boolean, default=True)
     requests = relationship(Requests, uselist=False, cascade="delete")
     deliveries = relationship(Deliveries, uselist=False)
+    user_id = Column(Integer)
 
     @classmethod
     def from_tuple(cls, data):
         """Helper method to populate the db"""
-        return cls(first_name=data[0], last_name=data[1], email=data[2], password=data[3], phone=data[4], type=data[5], online=True)
+        return cls(first_name=data[0], last_name=data[1], email=data[2], password=data[3], phone=data[4], type=data[5], user_id=data[6], online=True)
 
 
 

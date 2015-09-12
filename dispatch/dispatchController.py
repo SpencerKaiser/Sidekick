@@ -5,6 +5,11 @@ from sqlalchemy.sql import select
 from sqlalchemy.sql.expression import nullsfirst
 from tables import Deliveries, Shifts, Users
 
+def assignAuthFieldForUser(db, userId):
+	user = db.session.query(Users).filter(Users._id == userId).first()
+	user.user_id = userId
+	db.session.commit()
+
 def createDeliveryForRequest(db, id):
 	default_time = dt.datetime(2001, 1, 1)
 

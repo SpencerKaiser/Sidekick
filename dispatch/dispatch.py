@@ -1,4 +1,4 @@
-from dispatchController import createDeliveryForRequest
+from dispatchController import createDeliveryForRequest, assignAuthFieldForUser
 from eve import Eve
 from eve.auth import BasicAuth
 from eve_sqlalchemy import SQL
@@ -13,9 +13,11 @@ import json
 
 class BCryptAuth(BasicAuth):
 	def check_auth(self, username, password, allowed_roles, resource, method):
-		if resource == 'users':
+		if resource == 'users' and method in ['POST', 'GET']:
+			print 'Checking sidkick auth'
 			return username == 'sidekick' and password == 'halpme'
 		else:
+			print 'Checking user auth for', username
 			user = app.data.driver.session.query(Users).filter(Users.email == username).first()
 			self.set_request_auth_value(user._id)
 			return user and bcrypt.hashpw(password, user.password) == user.password
@@ -32,6 +34,22 @@ def post_requests_post_callback(request, lookup):
 	if data['_status'] == 'OK':
 		createDeliveryForRequest(db, data['_id'])
 
+def after_inserting_user(items):
+	try:
+		userId = items[0]['_id']
+		assignAuthFieldForUser(db, userId)
+		print 'Successfully updated auth field (user_id) for new user', userId
+	except:
+		print 'Error in updating auth field for new user from insert', items
+
+
+def after_updating_users(updates, original):
+	try:
+		if updates[u'online'] == True:
+			print 'user', original[u'_id'], 'is online.'
+	except:
+		print 'User info updated, not going online', updates
+
 # add custom route
 @app.route("/x")
 def hello():
@@ -39,6 +57,10 @@ def hello():
 
 # attach event hooks
 app.on_post_POST_requests += post_requests_post_callback
+
+# attach database event hooks
+app.on_inserted_users += after_inserting_user
+app.on_updated_users += after_updating_users
 
 if __name__ == '__main__':
 	
@@ -49,10 +71,10 @@ if __name__ == '__main__':
 	# Insert some example data in the db
 	masterPassword = bcrypt.hashpw('password123', bcrypt.gensalt())
 	test_data = [
-	    (u'George', u'Washington', u'gwash@money.com', masterPassword, u'1231231234', u'sidekick'),
-	    (u'John', u'Adams', u'jadams@money.com', masterPassword, u'1231231234', u'sidekick'),
-	    (u'Carly', u'Kubacak', u'ckubacak@money.com', masterPassword, u'1231231234', u'user'),
-	    (u'Thomas', u'Jefferson', u'tjefferson@money.com', masterPassword, u'1231231234', u'admin'),
+	    (u'Austin', u'Wells', u'a@w.com', masterPassword, u'1231231234', u'sidekick', u'1'),
+	    (u'Spencer', u'Kaiser', u's@k.com', masterPassword, u'1231231234', u'sidekick', u'2'),
+	    (u'Carly', u'Kubacak', u'c@k.com', masterPassword, u'1231231234', u'user', u'3'),
+	    (u'Irisa', u'Ona', u'i@o.com', masterPassword, u'1231231234', u'admin', u'4'),
 	]
 
 	test_data_shifts = [
