@@ -1,9 +1,11 @@
 from dispatchController import createDeliveryForRequest, assignAuthFieldForUser
 from eve import Eve
 from eve.auth import BasicAuth
+from eve_docs_test import eve_docs
 from eve_sqlalchemy import SQL
 from eve_sqlalchemy.decorators import registerSchema
 from eve_sqlalchemy.validation import ValidatorSQL
+from flask.ext.bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from tables import Users, Shifts, Requests, Deliveries, Base
@@ -23,6 +25,8 @@ class BCryptAuth(BasicAuth):
 			return user and bcrypt.hashpw(password, user.password) == user.password
 
 app = Eve(validator=ValidatorSQL, data=SQL, auth=BCryptAuth)
+Bootstrap(app)
+app.register_blueprint(eve_docs, url_prefix='/docs')
 
 # bind SQLAlchemy
 db = app.data.driver

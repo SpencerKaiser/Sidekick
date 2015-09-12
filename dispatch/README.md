@@ -4,6 +4,7 @@
 * eve: ``pip install eve ``
 * SQLAlchemy: `` pip install SQLAlchemy``
 * bcrpyt ``pip install py-bcrypt``
+* flask bootstrap ``pip install flask-bootstrap``
 
 
 ## Database Stuff
@@ -22,3 +23,5 @@ And create a database and new user for that db
 To run
 
 	python dispatch.py
+
+To view documentation for all endpoints, hit the url serverRoot/docs!
